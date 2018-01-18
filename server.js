@@ -16,7 +16,7 @@ const grep = spawn("ggrep", ["-oP", GREP_EXPRESSION, ARDUINO_DIRECTORY+ARDUINO_P
 var currentVersion = "";
 
 grep.stdout.on('data', function(data) {
-  currentVersion = data.toString();
+  currentVersion = data.toString().match(/\w+/);
 });
 
 app.get('/bin/:version/:id', function(req, res) {
