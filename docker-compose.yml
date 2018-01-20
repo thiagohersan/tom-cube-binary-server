@@ -1,6 +1,6 @@
 server:
   build: ./
   volumes:
-    - ./:/opt/server
+    - .:/opt/server
   ports:
     - 8000:8000
