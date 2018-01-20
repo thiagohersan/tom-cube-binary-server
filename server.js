@@ -11,7 +11,7 @@ const BIN_DIRECTORY = ARDUINO_DIRECTORY + "bin/";
 const BIN_FILENAME = "tom-cube.bin";
 const GREP_EXPRESSION = "VERSION = \"\\K(\\w+)";
 
-const grep = spawn("ggrep", ["-oP", GREP_EXPRESSION, ARDUINO_DIRECTORY+ARDUINO_PARAMETERS_FILENAME]);
+const grep = spawn("grep", ["-oP", GREP_EXPRESSION, ARDUINO_DIRECTORY+ARDUINO_PARAMETERS_FILENAME]);
 
 var currentVersion = "";
 
