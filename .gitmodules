@@ -1,0 +1,12 @@
+[submodule "build/makeEspArduino"]
+	path = build/makeEspArduino
+	url = https://github.com/plerup/makeEspArduino.git
+[submodule "build/libraries/Adafruit_NeoPixel"]
+	path = build/libraries/Adafruit_NeoPixel
+	url = https://github.com/adafruit/Adafruit_NeoPixel.git
+[submodule "build/tom-cube"]
+	path = build/tom-cube
+	url = https://github.com/thiagohersan/tom-cube.git
+[submodule "build/esp8266"]
+	path = build/esp8266
+	url = https://github.com/esp8266/Arduino.git
