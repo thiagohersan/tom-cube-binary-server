@@ -1,6 +1,16 @@
-server:
-  build: ./
-  volumes:
-    - .:/opt/server
-  ports:
-    - 8000:8000
+version: '2.1'
+
+services:
+  compile:
+    build:
+      context: ./tom-cube
+    volumes:
+      - ./tom-cube:/opt/tom-cube
+
+  server:
+    build:
+      context: ./
+    volumes:
+      - .:/opt/server
+    ports:
+      - 8000:8000
