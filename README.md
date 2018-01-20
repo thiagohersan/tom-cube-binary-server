@@ -2,7 +2,7 @@
 
 Server that checks and updates code running remotely on NodeMCUs inside the cubes.
 
-First it builds a binary using the checked out version of [tom-cube](https://github.com/thiagohersan/tom-cube){:target="_blank"}, then it serves the binary using a simple nodejs+express file server.
+First it builds a binary using the checked out version of [tom-cube](https://github.com/thiagohersan/tom-cube), then it serves the binary using a simple nodejs+express file server.
 
 
 ## Clone
