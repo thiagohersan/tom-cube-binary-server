@@ -8,6 +8,11 @@ RUN apt-get install -y arduino-core
 
 ADD . /opt/server/
 
+WORKDIR /opt/server/build/tom-cube/
+RUN git checkout -- *
+RUN git pull origin master
+RUN printf "String TREND = \"1\";\nString BINARY_VERSION = \"`git rev-parse HEAD`\";\n" > parameters.h
+
 WORKDIR /opt/server/build/esp8266/tools/
 RUN python get.py
 
