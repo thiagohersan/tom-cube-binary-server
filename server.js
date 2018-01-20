@@ -5,10 +5,10 @@ const express = require('express');
 
 var app = express();
 
-const ARDUINO_DIRECTORY = "tom-cube/";
+const ARDUINO_DIRECTORY = "build/tom-cube/";
 const ARDUINO_PARAMETERS_FILENAME = "parameters.h";
 const BIN_DIRECTORY = ARDUINO_DIRECTORY + "bin/";
-const BIN_FILENAME = "tom-cube.ino.bin";
+const BIN_FILENAME = "tom-cube.bin";
 const GREP_EXPRESSION = "VERSION = \"\\K(\\w+)";
 
 const grep = spawn("ggrep", ["-oP", GREP_EXPRESSION, ARDUINO_DIRECTORY+ARDUINO_PARAMETERS_FILENAME]);
