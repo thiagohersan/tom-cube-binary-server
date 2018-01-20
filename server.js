@@ -2,21 +2,23 @@ var port = process.env.PORT || 8000;
 
 const spawn = require('child_process').spawn;
 const express = require('express');
+var crypto = require('crypto');
 
 var app = express();
 
-const ARDUINO_DIRECTORY = "build/tom-cube/";
-const ARDUINO_PARAMETERS_FILENAME = "parameters.h";
+const ARDUINO_DIRECTORY = "tom-cube/";
+const ARDUINO_SOURCE_FILES = [ARDUINO_DIRECTORY+"/tom-cube.ino",
+                              ARDUINO_DIRECTORY+"/Trend.h",
+                              ARDUINO_DIRECTORY+"/Trend.cpp"];
 const BIN_DIRECTORY = ARDUINO_DIRECTORY + "bin/";
 const BIN_FILENAME = "tom-cube.bin";
-const GREP_EXPRESSION = "VERSION = \"\\K(\\w+)";
 
-const grep = spawn("grep", ["-oP", GREP_EXPRESSION, ARDUINO_DIRECTORY+ARDUINO_PARAMETERS_FILENAME]);
+const cat = spawn("cat", ARDUINO_SOURCE_FILES);
 
 var currentVersion = "";
 
-grep.stdout.on('data', function(data) {
-  currentVersion = data.toString().match(/\w+/);
+cat.stdout.on('data', function(data) {
+  currentVersion = crypto.createHash('md5').update(data.toString()).digest("hex");
 });
 
 app.get('/bin/:version/:id', function(req, res) {
