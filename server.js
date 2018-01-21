@@ -7,9 +7,9 @@ var crypto = require('crypto');
 var app = express();
 
 const ARDUINO_DIRECTORY = "tom-cube/";
-const ARDUINO_SOURCE_FILES = [ARDUINO_DIRECTORY+"/tom-cube.ino",
-                              ARDUINO_DIRECTORY+"/Trend.h",
-                              ARDUINO_DIRECTORY+"/Trend.cpp"];
+const ARDUINO_SOURCE_FILES = [ARDUINO_DIRECTORY+"tom-cube.ino",
+                              ARDUINO_DIRECTORY+"Trend.h",
+                              ARDUINO_DIRECTORY+"Trend.cpp"];
 const BIN_DIRECTORY = ARDUINO_DIRECTORY + "bin/";
 const BIN_FILENAME = "tom-cube.bin";
 
