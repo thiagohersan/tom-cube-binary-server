@@ -17,6 +17,12 @@ git clone --recurse-submodules
 #define PASS "my-password"
 ```
 
+#### Set server addresses on tom-cube/tom-cube.ino
+```
+String BINARY_SERVER_ADDRESS = "10.11.181.10";
+...
+String TREND_SERVER_ADDRESS = "10.11.181.10";
+```
 
 ## Build
 #### Build docker images:
