@@ -1,6 +1,10 @@
 FROM node:4.8.7-wheezy
 
-ADD . /opt/server/
-WORKDIR /opt/server/
+ADD package.json /tmp/package.json
+RUN cd /tmp && npm install
+RUN mkdir -p /opt/server && cp -a /tmp/node_modules /opt/server/
+
+WORKDIR /opt/server
+ADD . /opt/server
 
 CMD ["npm", "run", "start"]

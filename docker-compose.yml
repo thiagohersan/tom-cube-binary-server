@@ -12,5 +12,6 @@ services:
       context: ./
     volumes:
       - .:/opt/server
+      - /opt/server/node_modules
     ports:
       - 8000:8000
