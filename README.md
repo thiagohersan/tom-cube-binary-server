@@ -11,6 +11,12 @@ First it builds a binary using the checked out version of [tom-cube](https://git
 git clone --recurse-submodules
 ```
 
+#### Set WiFi network and password on tom-cube/wifipass.h
+```
+#define WIFI "my-network"
+#define PASS "my-password"
+```
+
 
 ## Build
 #### Build docker images:
