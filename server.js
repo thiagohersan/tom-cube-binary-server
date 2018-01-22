@@ -21,11 +21,11 @@ cat.stdout.on('data', function(data) {
   currentVersion = crypto.createHash('md5').update(data.toString()).digest("hex");
 });
 
-app.get('/bin/:version/:id', function(req, res) {
+app.get('/bin/:version', function(req, res) {
   var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  var ipId = ip.match(/\.([0-9]+)$/i)[1];
+  ip = ip.match(/([0-9]+\.){3}([0-9]+)$/)[0];
 
-  console.log("ip id: " + ipId + " , url id: " + req.params.id + " , version: " + req.params.version);
+  console.log("ip: " + ip + " || version: " + req.params.version);
 
   if(req.params.version == currentVersion) {
     res.set('Content-Type', 'text/plain');
@@ -37,7 +37,10 @@ app.get('/bin/:version/:id', function(req, res) {
 });
 
 app.get('*', function (req, res) {
-  console.log("request from: " + req.connection.remoteAddress);
+  var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  ip = ip.match(/([0-9]+\.){3}([0-9]+)$/)[0];
+
+  console.log("request from: " + ip);
 
   res.set('Content-Type', 'text/plain');
   res.status(200).send(""+100*Math.random());
