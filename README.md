@@ -6,30 +6,30 @@ First it builds a binary using the checked out version of [tom-cube](https://git
 
 --- 
 
-#### - Clone repo and submodules:
+- **Clone repo and submodules:**
 ```
-git clone --recurse-submodules
+git clone --recurse-submodules git@github.com:thiagohersan/tom-cube-binary-server.git
 ```
 
-#### - Copy ```tom-cube/wifipass.h.example``` to ```tom-cube/wifipass.h``` and change values for WiFi network name and password
+- **Copy** ```tom-cube/wifipass.h.example``` **to** ```tom-cube/wifipass.h``` **and change values for WiFi network name and password:**
 ```
 #define WIFI "my-network"
 #define PASS "my-password"
 ```
 
-#### - Set server addresses on tom-cube/tom-cube.ino
+- **Set server addresses on** ```tom-cube/tom-cube.ino```**:**
 ```
 String BINARY_SERVER_ADDRESS = "10.11.181.10";
 ...
 String TREND_SERVER_ADDRESS = "10.11.181.10";
 ```
 
-#### - Build docker images:
+- **Build docker images:**
 ```
 docker-compose build
 ```
 
-#### - Run docker services:
+- **Run docker services:**
 ```
 docker-compose up
 ```
