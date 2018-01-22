@@ -1,4 +1,4 @@
-FROM node:4.8.7-wheezy
+FROM node:4.8.7-stretch
 
 ADD package.json /tmp/package.json
 RUN cd /tmp && npm install
