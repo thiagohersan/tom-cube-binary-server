@@ -1,25 +1,13 @@
-var port = 8000;
-
-const spawn = require('child_process').spawn;
 const express = require('express');
-var crypto = require('crypto');
+require('dotenv').config()
 
+var port = 8000;
 var app = express();
 
-const ARDUINO_DIRECTORY = "tom-cube/";
-const ARDUINO_SOURCE_FILES = [ARDUINO_DIRECTORY+"tom-cube.ino",
-                              ARDUINO_DIRECTORY+"Trend.h",
-                              ARDUINO_DIRECTORY+"Trend.cpp"];
-const BIN_DIRECTORY = ARDUINO_DIRECTORY + "bin/";
+const BIN_DIRECTORY = "bin/";
 const BIN_FILENAME = "tom-cube.bin";
 
-const cat = spawn("cat", ARDUINO_SOURCE_FILES);
-
-var currentVersion = "";
-
-cat.stdout.on('data', function(data) {
-  currentVersion = crypto.createHash('md5').update(data.toString()).digest("hex");
-});
+var currentVersion = process.env.LATEST_COMMIT_HASH || 'deadbeef';
 
 app.get('/bin/:version', function(req, res) {
   var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
