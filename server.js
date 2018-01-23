@@ -1,4 +1,4 @@
-var port = process.env.PORT || 8000;
+var port = 8000;
 
 const spawn = require('child_process').spawn;
 const express = require('express');
@@ -40,7 +40,7 @@ app.get('*', function (req, res) {
   var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   ip = ip.match(/([0-9]+\.){3}([0-9]+)$/)[0];
 
-  console.log("request from: " + ip);
+  console.log("request from: " + ip + " || at: " + req.params[0]);
 
   res.set('Content-Type', 'text/plain');
   res.status(200).send(""+100*Math.random());
