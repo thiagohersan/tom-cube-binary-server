@@ -1,5 +1,5 @@
 const express = require('express');
-require('dotenv').config()
+var fs = require('fs');
 
 var port = 8000;
 var app = express();
@@ -7,7 +7,12 @@ var app = express();
 const BIN_DIRECTORY = "bin/";
 const BIN_FILENAME = "tom-cube.bin";
 
-var currentVersion = process.env.LATEST_COMMIT_HASH || 'deadbeef';
+var currentVersion = 'deadbeef';
+
+var versionJson = fs.readFileSync(__dirname + '/bin/version.json', 'utf8');
+currentVersion = JSON.parse(versionJson).object.sha;
+
+console.log("serving binary version: " + currentVersion);
 
 app.get('/bin/:version', function(req, res) {
   var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;

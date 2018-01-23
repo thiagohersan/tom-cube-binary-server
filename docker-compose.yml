@@ -1,11 +1,4 @@
-version: '2.1'
-
-services:
-  server:
-    build:
-      context: ./
-    volumes:
-      - .:/opt/server
-      - /opt/server/node_modules
-    ports:
-      - 8000:8000
+server:
+  build: ./
+  ports:
+    - 8000:8000
