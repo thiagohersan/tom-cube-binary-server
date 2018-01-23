@@ -1,12 +1,5 @@
 version: '2.1'
 
-services:
-  compile:
-    build:
-      context: ./tom-cube
-    volumes:
-      - ./tom-cube:/opt/tom-cube
-
   server:
     build:
       context: ./
