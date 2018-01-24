@@ -7,10 +7,10 @@ var app = express();
 const BIN_DIRECTORY = "bin/";
 const BIN_FILENAME = "tom-cube.bin";
 
-var currentVersion = 'deadbeef';
+app.currentVersion = 'deadbeef';
 
 var versionJson = fs.readFileSync(__dirname + '/bin/version.json', 'utf8');
-currentVersion = JSON.parse(versionJson).object.sha;
+app.currentVersion = JSON.parse(versionJson).object.sha;
 
 console.log("serving binary version: " + currentVersion);
 
@@ -20,7 +20,7 @@ app.get('/bin/:version', function(req, res) {
 
   console.log("ip: " + ip + " || version: " + req.params.version);
 
-  if(req.params.version == currentVersion) {
+  if(req.params.version == app.currentVersion) {
     res.set('Content-Type', 'text/plain');
     res.status(304).send("");
   } else {

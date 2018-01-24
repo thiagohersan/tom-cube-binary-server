@@ -6,8 +6,8 @@ ADD package.json /tmp/package.json
 RUN cd /tmp && npm install
 RUN mkdir -p /opt/server && cp -a /tmp/node_modules /opt/server/
 
-RUN mkdir -p /opt/server/bin
-WORKDIR /opt/server/bin
+RUN mkdir -p /opt/server/app/bin
+WORKDIR /opt/server/app/bin
 
 ADD https://api.github.com/repos/thiagohersan/tom-cube/git/refs/heads/master version.json
 
@@ -18,6 +18,7 @@ RUN LATEST_RELEASE=$(cat /tmp/LATEST_RELEASE) && \
     curl -Os $GIT_URL/releases/download/$LATEST_RELEASE/tom-cube.bin
 
 WORKDIR /opt/server
-ADD *.js *.json /opt/server/
+ADD package.json /opt/server/
+ADD app/*.js /opt/server/app/
 
 CMD ["npm", "run", "start"]
