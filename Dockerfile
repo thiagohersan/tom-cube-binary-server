@@ -15,7 +15,7 @@ RUN curl -Ls -H 'Accept: application/json' $GIT_URL/releases/latest | \
     sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/' > /tmp/LATEST_RELEASE
 
 RUN LATEST_RELEASE=$(cat /tmp/LATEST_RELEASE) && \
-    curl -Os $GIT_URL/releases/download/$LATEST_RELEASE/tom-cube.bin
+    wget $GIT_URL/releases/download/$LATEST_RELEASE/tom-cube.bin
 
 WORKDIR /opt/server
 ADD package.json /opt/server/
