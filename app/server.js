@@ -2,7 +2,8 @@ const express = require('express');
 var fs = require('fs');
 
 var port = 8000;
-var app = express();
+var expressApp = express();
+var app = require('http').createServer(expressApp);
 
 const BIN_DIRECTORY = "bin/";
 const BIN_FILENAME = "tom-cube.bin";
@@ -15,7 +16,7 @@ app.currentVersion = JSON.parse(versionJson).object.sha;
 
 logExceptOnTest("serving binary version: " + app.currentVersion);
 
-app.get('/bin/:version', function(req, res) {
+expressApp.get('/bin/:version', function(req, res) {
   var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   ip = ip.match(/([0-9]+\.){3}([0-9]+)$/)[0];
 
@@ -34,7 +35,7 @@ app.get('/bin/:version', function(req, res) {
   }
 });
 
-app.get('*', function (req, res) {
+expressApp.get('*', function (req, res) {
   var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   ip = ip.match(/([0-9]+\.){3}([0-9]+)$/)[0];
 

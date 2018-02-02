@@ -5,14 +5,21 @@ var chaiHttp = require('chai-http');
 var assert = chai.assert;
 var should = chai.should();
 var expect = chai.expect;
-var server = require("../app/server");
+var server, version;
 
 chai.use(chaiHttp);
 
+before(function () {
+  server = require("../app/server");
+  version = server.currentVersion;
+});
+
+after(function () {
+  server.close();
+});
+
 describe("Arduino binary server", function() {
   describe("has a version id for the binary that", function() {
-    var version = server.currentVersion;
-
     it("is a string", function() {
       version.should.be.a('string');
     });
@@ -27,8 +34,6 @@ describe("Arduino binary server", function() {
   });
 
   describe("route /bin/version", function() {
-    var version = server.currentVersion;
-
     beforeEach(function() {
       server.alreadyUpdated = {};
     });
