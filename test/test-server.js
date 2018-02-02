@@ -29,9 +29,16 @@ describe("Arduino binary server", function() {
   describe("route /bin/version", function() {
     var version = server.currentVersion;
 
-    it("returns 304 if version from request is the same as version being served", function(done) {
+    beforeEach(function() {
+      server.alreadyUpdated = {};
+    });
+
+    it("serves a binary if it's the first request from this ip, even if it's for the same version being served", function(done) {
       chai.request(server).get('/bin/'+version).end(function(err, res) {
-        res.should.have.status(304);
+        if (err) done(err);
+        res.should.have.status(200);
+        res.should.have.header('content-type');
+        res.header['content-type'].should.be.equal('application/octet-stream');
         done();
       });
     });
@@ -42,6 +49,25 @@ describe("Arduino binary server", function() {
         res.should.have.status(200);
         res.should.have.header('content-type');
         res.header['content-type'].should.be.equal('application/octet-stream');
+        done();
+      });
+    });
+
+    it("serves a binary if version from request is different from version being served, even when ip has already been updated", function(done) {
+      server.alreadyUpdated["127.0.0.1"] = '';
+      chai.request(server).get('/bin/'+version.substring(1)).end(function(err, res) {
+        if (err) done(err);
+        res.should.have.status(200);
+        res.should.have.header('content-type');
+        res.header['content-type'].should.be.equal('application/octet-stream');
+        done();
+      });
+    });
+
+    it("returns 304 if version from request is the same as version being served and this ip already updated once", function(done) {
+      server.alreadyUpdated["127.0.0.1"] = '';
+      chai.request(server).get('/bin/'+version).end(function(err, res) {
+        res.should.have.status(304);
         done();
       });
     });

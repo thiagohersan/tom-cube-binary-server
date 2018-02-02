@@ -8,6 +8,7 @@ const BIN_DIRECTORY = "bin/";
 const BIN_FILENAME = "tom-cube.bin";
 
 app.currentVersion = 'deadbeef';
+app.alreadyUpdated = {};
 
 var versionJson = fs.readFileSync(__dirname + '/bin/version.json', 'utf8');
 app.currentVersion = JSON.parse(versionJson).object.sha;
@@ -20,12 +21,16 @@ app.get('/bin/:version', function(req, res) {
 
   logExceptOnTest("request from: " + ip + " for version: " + req.params.version);
 
-  if(req.params.version == app.currentVersion) {
-    res.set('Content-Type', 'text/plain');
-    res.status(304).send("");
-  } else {
+  var needsUpdated = (!(ip in app.alreadyUpdated)) ||
+                     (req.params.version != app.currentVersion);
+
+  if(needsUpdated) {
+    app.alreadyUpdated[ip] = '';
     res.set('Content-Type', 'application/octet-stream');
     res.status(200).sendFile(BIN_FILENAME, { root: __dirname + "/" + BIN_DIRECTORY });
+  } else {
+    res.set('Content-Type', 'text/plain');
+    res.status(304).send("");
   }
 });
 
