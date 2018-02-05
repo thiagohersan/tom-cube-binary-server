@@ -27,6 +27,15 @@ server.sendTextResponse = function(res, code, text) {
   res.status(code).send(text);
 }
 
+server.cleanUpBinDirectory = function(mBinDirectory) {
+  fs.unlink(mBinDirectory + '/version.json', function(err) {
+    fs.rmdir(mBinDirectory, function(err) {});
+  });
+  fs.unlink(mBinDirectory + '/tom-cube.bin', function(err) {
+    fs.rmdir(mBinDirectory, function(err) {});
+  });
+}
+
 expressApp.get('/bin/:version', function(req, res) {
   var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   ip = ip.match(/([0-9]+\.){3}([0-9]+)$/)[0];
@@ -45,40 +54,43 @@ expressApp.get('/bin/:version', function(req, res) {
 
 expressApp.get('/update/:tag', function(req, res) {
   var releaseTag = req.params.tag;
+  var mBinDirectory = __dirname + '/bin/' + releaseTag;
 
-  if(fs.existsSync(__dirname + '/bin/' + releaseTag)) {
+  if(fs.existsSync(mBinDirectory)) {
     server.setupBinaryVersion(releaseTag);
     server.sendTextResponse(res, 200, "updated bin to version " + releaseTag);
   } else {
-    var requestOptions = {
-      url: GIT_TAGS_URL + releaseTag,
-      headers: {
-        'User-Agent': 'request'
-      }
-    };
+    var filesDownloaded = 0;
+    var requestOptions = {};
+    requestOptions.headers = { 'User-Agent': 'request' };
 
-    server.request(requestOptions, function(error, versionResponse, versionBody) {
-      if(!error && versionResponse.statusCode == 200) {
-        requestOptions.url = GIT_RELEASES_URL + releaseTag + '/' + BIN_FILENAME;
-        requestOptions.encoding = null;
-        server.request(requestOptions, function(error, binaryResponse, binaryBody) {
-          if(!error && binaryResponse.statusCode == 200) {
-            var mBinDirectory = __dirname + '/bin/' + releaseTag;
+    var saveResponse = function(filename, filetype) {
+      return function(error, response, body) {
+        if(!error && response.statusCode == 200) {
+          if(!fs.existsSync(mBinDirectory)) {
             fs.mkdirSync(mBinDirectory);
+          }
+          fs.writeFileSync(mBinDirectory + '/' + filename, body, filetype);
 
-            fs.writeFileSync(mBinDirectory + '/version.json', versionBody, 'utf8');
-            fs.writeFileSync(mBinDirectory + '/tom-cube.bin', binaryBody, 'binary');
-
+          if(++filesDownloaded > 1) {
             server.setupBinaryVersion(releaseTag);
             server.sendTextResponse(res, 200, "updated bin to version " + releaseTag);
-          } else{
-            server.sendTextResponse(res, 404, "binary not found");
           }
-        });
-      } else {
-        server.sendTextResponse(res, 404, "version info not found");
+        } else {
+          server.cleanUpBinDirectory(mBinDirectory);
+          if(!res.headersSent) {
+            server.sendTextResponse(res, 404, "version "+releaseTag+" not found");
+          }
+        }
       }
-    });
+    }
+
+    requestOptions.url = GIT_TAGS_URL + releaseTag;
+    server.request(requestOptions, saveResponse('version.json', 'utf8'));
+
+    requestOptions.url = GIT_RELEASES_URL + releaseTag + '/' + BIN_FILENAME;
+    requestOptions.encoding = null;
+    server.request(requestOptions, saveResponse('tom-cube.bin', 'binary'));
   }
 });
 

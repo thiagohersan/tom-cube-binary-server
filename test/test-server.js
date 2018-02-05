@@ -13,10 +13,10 @@ chai.use(chaiHttp);
 chai.use(chaiSpies);
 
 before(function() {
-  fs.mkdirSync(__dirname + '/../app/bin/is-a-version');
+  fs.mkdirSync(__dirname + '/../app/bin/local-version');
 });
 after(function () {
-  fs.rmdirSync(__dirname + '/../app/bin/is-a-version');
+  fs.rmdirSync(__dirname + '/../app/bin/local-version');
   app.close();
 });
 
@@ -60,7 +60,13 @@ describe("Arduino binary server", function() {
       chai.spy.on(fs, 'writeFileSync', function(){});
 
       chai.spy.on(server, 'setupBinaryVersion', function(){});
-      chai.spy.on(server, 'request');
+      chai.spy.on(server, 'request', function(requestOptions, cb) {
+        if(requestOptions.url.indexOf('not-a-version') != -1) {
+          cb(null, {statusCode: 404}, '');
+        } else if(requestOptions.url.indexOf('web-version') != -1) {
+          cb(null, {statusCode: 200}, '');
+        }
+      });
     });
 
     afterEach(function() {
@@ -78,19 +84,21 @@ describe("Arduino binary server", function() {
     });
 
     it("doesn't download anything if version already available", function(done) {
-      chai.request(app).get('/update/is-a-version').end(function(err, res) {
+      chai.request(app).get('/update/local-version').end(function(err, res) {
+        if (err) done(err);
         res.should.have.status(200);
         server.request.should.not.have.been.called();
-        server.setupBinaryVersion.should.have.been.called.with('is-a-version');
+        server.setupBinaryVersion.should.have.been.called.with('local-version');
         done();
       });
     });
 
     it("downloads and serves a new version if it's available on github", function(done) {
-      chai.request(app).get('/update/for-testing').end(function(err, res) {
+      chai.request(app).get('/update/web-version').end(function(err, res) {
+        if (err) done(err);
         res.should.have.status(200);
         server.request.should.have.been.called();
-        server.setupBinaryVersion.should.have.been.called.with('for-testing');
+        server.setupBinaryVersion.should.have.been.called.with('web-version');
         done();
       });
     });
