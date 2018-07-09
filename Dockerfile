@@ -1,4 +1,4 @@
-FROM node:4.8.7-stretch
+FROM node:8-stretch
 
 ENV GIT_REPO_URL https://github.com/thiagohersan/tom-cube
 ENV GIT_API_URL https://api.github.com/repos/thiagohersan/tom-cube/git
